@@ -7,17 +7,17 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db, collectionPath } from "../services/firebase";
-import { userId } from "../config/user";
+import { USER_ID } from "../config/user";
 
 // Gera um novo ID
 const generateId = () => doc(collection(db, "dummy")).id;
 
 // Carrega todos os itens de uma coleção
 export const getItems = async (colName) => {
-  if (!userId) return [];
+  if (!USER_ID) return [];
 
   try {
-    const colRef = collection(db, collectionPath(colName, userId));
+    const colRef = collection(db, collectionPath(colName, USER_ID));
     const snap = await getDocs(colRef);
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   } catch (error) {
@@ -28,12 +28,12 @@ export const getItems = async (colName) => {
 
 // Salva um item
 export const saveItem = async (colName, item) => {
-  if (!userId) return;
+  if (!USER_ID) return;
 
   const id = item.id || generateId();
 
   try {
-    const docRef = doc(db, collectionPath(colName, userId), id);
+    const docRef = doc(db, collectionPath(colName, USER_ID), id);
     await setDoc(docRef, { ...item, id }, { merge: true });
     console.log(`Salvo com sucesso em ${colName}`);
   } catch (error) {
@@ -44,10 +44,10 @@ export const saveItem = async (colName, item) => {
 
 // Deleta item por ID
 export const deleteItem = async (colName, id) => {
-  if (!userId) return;
+  if (!USER_ID) return;
 
   try {
-    const docRef = doc(db, collectionPath(colName, userId), id);
+    const docRef = doc(db, collectionPath(colName, USER_ID), id);
     await deleteDoc(docRef);
     console.log(`Item ${id} removido de ${colName}`);
   } catch (error) {

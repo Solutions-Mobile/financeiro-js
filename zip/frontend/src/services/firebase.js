@@ -1,8 +1,9 @@
 // src/services/firebase.js
 
-//import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore, setLogLevel } from 'firebase/firestore';
+
 
 // =================================================================
 // SIMULAÇÃO DE CONFIGURAÇÃO DE AMBIENTE (SUBSTITUIR POR SUAS CREDENCIAIS)
@@ -21,32 +22,45 @@ const localFirebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+
+
 let app;
+let auth;
 let db;
 let isInitialized = false;
 
+// Função para inicializar o Firebase uma única vez
 const initFirebase = () => {
-  if (isInitialized) return { app, db, appId: localAppId };
+  if (isInitialized) return { app, auth, db, appId: localAppId };
+
+  if (localFirebaseConfig.projectId === "YOUR_PROJECT_ID") {
+    console.warn("AVISO: Usando configurações de placeholder do Firebase. O Firestore não funcionará sem as credenciais reais.");
+    return { app: null, auth: null, db: null, appId: localAppId };
+  }
 
   try {
     app = initializeApp(localFirebaseConfig);
+    auth = getAuth(app);
     db = getFirestore(app);
 
-    setLogLevel("debug");
+    setLogLevel('debug');
     isInitialized = true;
 
-    console.log("Firebase inicializado SEM autenticação.");
-  } catch (err) {
-    console.error("Erro ao iniciar Firebase:", err);
+    console.log("Firebase inicializado com sucesso (usando configurações locais).");
+
+  } catch (error) {
+    console.error("Falha ao inicializar o Firebase:", error);
   }
 
-  return { app, db, appId: localAppId };
-};
+  return { app, auth, db, appId: localAppId };
+}
 
+// Inicializa e exporta as instâncias
 initFirebase();
 
-export { app, db, localAppId as appId };
+export { app, auth, db, localAppId as appId };
 
+// Helper para caminhos
 // artifacts/financeiro-d5f31/users/7QW8skPJAJVS6AwOTDnswvd8cfj2
 export const collectionPath = (collectionName, currentUserId) =>
 `/artifacts/${localFirebaseConfig.projectId}/users/${currentUserId}/${collectionName}`;

@@ -7,14 +7,11 @@ import AddTransaction from './components/transactions/AddTransaction';
 import TransactionList from './components/forms/TransactionList';
 import SettingsPage from './components/settings/SettingsPage';
 import { LayoutDashboard, Plus, Settings, StatusMessage } from './utils/Icons';
-import { userId } from './config/user';
 
 // --- COMPONENTE PRINCIPAL APP ---
 
 const App = () => {
     // Hook personalizado com toda a lógica do Firebase e estado
-     //const  {userId} = userId,
-
     const { 
         isLoading, 
         error, 
@@ -24,6 +21,7 @@ const App = () => {
         expenseTotal, 
         addTransaction, 
         deleteTransaction, 
+        userId,
         formatCurrency
     } = useFinanceData();
 
