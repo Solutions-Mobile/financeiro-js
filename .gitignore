@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 _trash
+_zip
 
 # Editor directories and files
 .vscode/*
@@ -23,4 +24,3 @@ _trash
 *.njsproj
 *.sln
 *.sw?
-zip
